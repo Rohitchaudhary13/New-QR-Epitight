@@ -1,1 +1,5 @@
 node_modules
+.gitignore
+frontend/node_modules
+frontend/.env
+.env

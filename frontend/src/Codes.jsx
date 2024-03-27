@@ -1,9 +1,11 @@
 // Codes.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-
+import UseAnimations from "react-useanimations";
+import loading2 from "react-useanimations/lib/loading2";
 
 const Codes = () => {
+  const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
   const [couponCodes, setCouponCodes] = useState([]);
 
   useEffect(() => {
@@ -12,7 +14,7 @@ const Codes = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/coupons`);
+      const response = await axios.get(`${backendURL}/api/coupons`);
       setCouponCodes(response.data);
     } catch (error) {
       console.error('Error fetching coupons:', error.message);

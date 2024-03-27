@@ -4,20 +4,26 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import UseAnimations from "react-useanimations";
 import loading2 from "react-useanimations/lib/loading2";
+import CouponSlip from "./CouponSlip";
 
 const CouponCodeGenerator = () => {
-  // const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
+  const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   const [numCoupons, setNumCoupons] = useState(1);
   const [couponCodes, setCouponCodes] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedDate, setSelectedDate] = useState("");
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+  };
+
   useEffect(() => {
     fetchCoupons();
   }, []); // Fetch coupons when the component mounts
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/coupons`);
+      const response = await axios.get(`${backendURL}/api/coupons`);
       setCouponCodes(response.data);
     } catch (error) {
       console.error("Error fetching coupons:", error.message);
@@ -32,7 +38,7 @@ const CouponCodeGenerator = () => {
       const generatedCouponCodes = [];
       for (let i = 0; i < numCoupons; i++) {
         const { data } = await axios.post(
-          `http://localhost:8000/api/coupons`,
+          `${backendURL}/api/coupons`,
           generateCouponData()
         );
         generatedCouponCodes.push(data);
@@ -47,9 +53,11 @@ const CouponCodeGenerator = () => {
   };
 
   const generateCouponData = () => {
+    const currentDate = new Date(); // Get the current date
+    const formattedDate = currentDate.toISOString().split("T")[0];
     const couponCode = generateUniqueCouponCode();
-    const link = `https://epitight1.myshopify.com/pages/coupon?couponCode=${couponCode}`;
-    return { couponCode, link, used: false };
+    const link = `https://epitight.in/pages/coupon?couponCode=${couponCode}`;
+    return { couponCode, link, used: false, generatedAt: formattedDate };
   };
 
   const generateUniqueCouponCode = () => {
@@ -65,6 +73,24 @@ const CouponCodeGenerator = () => {
     return couponCode;
   };
 
+  const handleDeleteData = async () => {
+    try {
+      await axios.delete("${backendURL}/api/coupons");
+      alert("All data deleted successfully!");
+      window.location.reload();
+    } catch (error) {
+      alert("Error deleting data. Please try again later.");
+    }
+  };
+
+  const handleViewCodes = () => {
+    if (!selectedDate) {
+      alert("Please select a date.");
+    } else {
+      window.location.href = `/coupons/${selectedDate}`;
+    }
+  };
+
   return (
     <div className="w-11/12 mx-auto">
       {loading ? (
@@ -73,37 +99,70 @@ const CouponCodeGenerator = () => {
         </div>
       ) : (
         <>
-          <h1 className="text-center mt-16">Sunchem QR Generator</h1>
-          <div className="w-full gap-16 h-auto py-16 my-16 flex flex-col justify-center items-center bg-white rounded-2xl p-4 text-black">
-            <div className="flex gap-4">
-              <label className="block mb-2 text-2xl">
-                Number of coupons
-              </label>
-              <input
-                type="number"
-                placeholder="Enter Number"
-                className="text-center w-full p-2 border rounded-full placeholder:pl-4 border-gray-300 text-[#f6f6f6] placeholder:text-[#f6f6f6] placeholder:opacity-50 mb-4"
-                value={numCoupons}
-                onChange={(e) => setNumCoupons(e.target.value)}
-              />
+          <h1 className="text-center mt-16">Epitight QR Generator</h1>
+
+          <div className="flex flex-col justify-center items-center gap-16 h-auto py-8 lg:py-16 my-16 bg-gray-100 rounded-3xl">
+            {/* Blocks Container */}
+            <div className="flex flex-col lg:flex-row justify-center items-center gap-16">
+              {/* Block 1 */}
+              <div className="bg-white text-black rounded-3xl shadow-lg p-8 flex flex-col justify-center items-center text-center">
+                <h2 className="text-3xl font-bold mb-4">Generate Coupons</h2>
+                <div className="flex flex-col gap-4 items-center">
+                  <label htmlFor="numCoupons" className="text-xl">
+                    Number of Coupons
+                  </label>
+                  <input
+                    type="number"
+                    id="numCoupons"
+                    placeholder="Enter Number"
+                    className="text-center w-full p-3 border rounded-full placeholder-pl-4 border-gray-300 text-white placeholder-gray-300 mb-4"
+                    value={numCoupons}
+                    onChange={(e) => setNumCoupons(e.target.value)}
+                  />
+                  <button
+                    className="bg-blue-500 text-white py-3 px-6 rounded-full"
+                    onClick={generateCouponCodes}
+                  >
+                    Generate
+                  </button>
+                </div>
+              </div>
+
+              {/* Block 2 */}
+              <div className="bg-white text-black rounded-3xl shadow-lg p-8 flex flex-col justify-center items-center text-center">
+                <h2 className="text-3xl font-bold mb-4">View Filtered Codes</h2>
+                <div className="flex flex-col gap-4 items-center">
+                  <label htmlFor="date" className="text-xl">
+                    Select Date
+                  </label>
+                  <input
+                    type="date"
+                    id="date"
+                    value={selectedDate} 
+                    onChange={handleDateChange}
+                    className="text-center w-full border rounded-full p-3 border-gray-300 text-white placeholder-gray-300 mb-4"
+                  />                  
+                  <button className="bg-blue-500 text-white py-3 px-6 rounded-full" onClick={handleViewCodes}>
+                    View Codes
+                  </button>                  
+                </div>
+              </div>
             </div>
 
-            <div className="flex gap-8 justify-center items-center">
-              <button
-                className="bg-blue-500 text-white py-2 px-4 rounded-full"
-                onClick={generateCouponCodes}
-              >
-                Generate Coupon Codes
-              </button>
+            {/* "See All Codes" button */}
+            <div className="mt-2">
               <Link
                 className="rounded-full text-white hover:text-white"
                 to="/codes"
               >
-                <button className="rounded-full">See All Codes</button>
+                <button className="text-white py-3 px-6 rounded-full">
+                  See All Codes
+                </button>
               </Link>
-            </div>
+            </div>           
           </div>
-          <div className="my-16">
+
+          <div className="mt-8 mb-2">
             <p>Total coupon codes generated till now: {couponCodes.length}</p> 
             <p>
               <b className="text-red-700">Used</b> coupon codes:{" "}
@@ -114,6 +173,13 @@ const CouponCodeGenerator = () => {
               {couponCodes.filter((coupon) => !coupon.used).length}
             </p>
           </div>
+
+          <button
+            className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded my-10"
+            onClick={handleDeleteData}
+          >
+            Delete All Data
+          </button>
 
           <h2 className="text-4xl">
             All Generated coupon codes and their status
@@ -139,6 +205,8 @@ const CouponCodeGenerator = () => {
               )
             )}
           </div>
+
+          <CouponSlip />
         </>
       )}
     </div>

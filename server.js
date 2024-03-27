@@ -29,6 +29,7 @@ const Coupon = mongoose.model("Coupon", {
   link: String,
   used: Boolean,
   qrCodeImage: String,
+  generatedAt: { type: Date }
 });
 
 const path = require("path");
@@ -37,9 +38,20 @@ app.get("/", (req, res) => {
   res.sendFile(path.resolve(__dirname, "frontend", "index.html"));
 });
 
-app.get("/api/coupons", async (req, res) => {
+app.get('/api/coupons', async (req, res) => {
   try {
-    const coupons = await Coupon.find();
+    const { date, used } = req.query;
+    let coupons;
+    if (date) {      
+      const startDate = new Date(date); // Start of the selected date
+      const endDate = new Date(new Date(date).setHours(23, 59, 59)); // End of the selected date
+      coupons = await Coupon.find({
+        generatedAt: { $gte: startDate, $lte: endDate },
+        used: used === 'true'
+      });
+    } else {   
+      coupons = await Coupon.find();
+    }
     res.json(coupons);
   } catch (error) {
     res.status(500).send(error.message);
@@ -50,7 +62,7 @@ const sharp = require('sharp');
 
 app.post("/api/coupons", async (req, res) => {
   try {
-    const { couponCode, link } = req.body;
+    const { couponCode, link, generatedAt } = req.body;
 
     // Generate QR code with a higher error correction level
     const qrCodeBuffer = await QRCode.toBuffer(link, { errorCorrectionLevel: "Q" });
@@ -68,12 +80,17 @@ app.post("/api/coupons", async (req, res) => {
       link,
       used: false,
       qrCodeImage: qrCodeBase64,
+      generatedAt: generatedAt
     });
     await newCoupon.save();
     res.json(newCoupon);
   } catch (error) {
     res.status(500).send(error.message);
   }
+});
+
+app.get("/api/markCouponUsed", async (req, res) => {
+  res.send("<h1>Hi</h1>");
 });
 
 app.post("/api/markCouponUsed", async (req, res) => {
@@ -134,6 +151,15 @@ app.get("/validate-coupon/:couponCode", async (req, res) => {
 
     // Return the coupon status
     res.json({ status: coupon.used ? "used" : "unused" });
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
+
+app.delete("/api/coupons", async (req, res) => {
+  try {
+    await Coupon.deleteMany({}); 
+    res.status(204).end();
   } catch (error) {
     res.status(500).send(error.message);
   }
