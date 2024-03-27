@@ -75,7 +75,7 @@ const CouponCodeGenerator = () => {
 
   const handleDeleteData = async () => {
     try {
-      await axios.delete("${backendURL}/api/coupons");
+      await axios.delete(`${backendURL}/api/coupons`);
       alert("All data deleted successfully!");
       window.location.reload();
     } catch (error) {
@@ -165,17 +165,17 @@ const CouponCodeGenerator = () => {
           <div className="mt-8 mb-2">
             <p>Total coupon codes generated till now: {couponCodes.length}</p> 
             <p>
-              <b className="text-red-700">Used</b> coupon codes:{" "}
+              <b className="text-red">Used</b> coupon codes:{" "}
               {couponCodes.filter((coupon) => coupon.used).length}
             </p>
             <p>
-              <b className="text-green-700">Not Used</b> coupon codes:{" "}
+              <b className="text-green">Not Used</b> coupon codes:{" "}
               {couponCodes.filter((coupon) => !coupon.used).length}
             </p>
           </div>
 
           <button
-            className="bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded my-10"
+            className="bg-red hover:bg-red text-white py-2 px-4 rounded my-10"
             onClick={handleDeleteData}
           >
             Delete All Data
@@ -196,7 +196,7 @@ const CouponCodeGenerator = () => {
                   </p>
                   <p
                     className={`text-center mt-2 ${
-                      used ? "text-red-500" : "text-green-500"
+                      used ? "text-red" : "text-green"
                     }`}
                   >
                     {used ? "Status : Used" : "Status : Not Used"}
@@ -206,7 +206,7 @@ const CouponCodeGenerator = () => {
             )}
           </div>
 
-          <CouponSlip />
+          {/* <CouponSlip /> */}
         </>
       )}
     </div>

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import axios from "axios";
 import UseAnimations from "react-useanimations";
 import loading2 from "react-useanimations/lib/loading2";
+import CouponSlip from "./CouponSlip";
 
 const FilteredCoupons = () => {
   const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
@@ -39,14 +40,13 @@ const FilteredCoupons = () => {
         ) : (
           couponCodes.map((coupon, index) => (
             <>
-              <div
+              {/* <div
                 key={index}
                 className="bg-[#f6f6f6] w-[32.95vw] gap-2 text-black border border-black flex flex-col p-4"
               >
                 <p className="text-red-600">
                   UrbanYog Hair Volumizing Pwder Wax strong hold 10gm
                 </p>
-                {/* Display the QR code using qrcode.react */}
                 <div className="flex flex-row-reverse justify-between items-start">
                   <div className="w-32">
                     <img
@@ -68,9 +68,9 @@ const FilteredCoupons = () => {
                     </ol>
                     <p>#QR Code : {coupon.couponCode}</p>
                   </div>
-                  {/* <button><Link to={coupon.link} target="_blank">Coupon Link</Link></button> */}
                 </div>
-              </div>
+              </div> */}
+              <CouponSlip qrimage={coupon.qrCodeImage} qrcode={coupon.couponCode} />
             </>
           ))
         )}

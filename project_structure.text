@@ -1,0 +1,29 @@
+- .env
+- frontend
+  - .env
+  - .eslintrc.cjs
+  - index.html
+  - package-lock.json
+  - package.json
+  - postcss.config.js
+  - public
+    - vite.svg
+  - README.md
+  - src
+    - App.css
+    - App.jsx
+    - assets
+      - image.png
+      - react.svg
+    - Codes.jsx
+    - CouponCodeGenerator.jsx
+    - CouponSlip.jsx
+    - FilteredCoupons.jsx
+    - index.css
+    - main.jsx
+  - tailwind.config.js
+  - vite.config.js
+- package-lock.json
+- package.json
+- server.js
+- vercel.json

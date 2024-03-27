@@ -17,6 +17,11 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+li::before{ 
+  content: "\00BB"; 
+  margin-right: 0.5rem;
+} 
+
 a {
   font-weight: 500;
   color: #646cff;
