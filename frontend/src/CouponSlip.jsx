@@ -2,14 +2,14 @@ import React from 'react';
 import image from '../src/assets/image.png'
 import { CiGlobe } from "react-icons/ci";
 import { FaInstagram } from "react-icons/fa";
+{/* <div className="w-full">
+  <img src={image} alt="" className="w-full h-auto" />
+</div> */}
 
 function CouponSlip(props) {
   return (
-      <div className="w-1/2 gap-4 flex flex-col p-4">
-        <div className="w-full">
-          <img src={image} alt="" className="w-full h-auto" />
-        </div>
-        <div className="flex bg-dark text-white p-4 gap-4">
+      // <div className=" gap-4 flex flex-col">
+        <div className="flex bg-dark text-white p-4 gap-4 aspect-[710/296] h-[300px] border-white border">
           <div className="w-3/5">
             <h1 className="m-0 text-3xl font-bold">Epitight Dry Shampoo</h1>
             <ul className="list-none ml-4 py-4">
@@ -28,7 +28,7 @@ function CouponSlip(props) {
             <div className="">#QR Code:{props.qrcode}</div>
           </div>
         </div>
-    </div>
+    // </div>
   );
 }
 
