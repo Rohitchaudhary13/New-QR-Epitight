@@ -6,7 +6,6 @@ import loading2 from "react-useanimations/lib/loading2";
 import CouponSlip from "./CouponSlip";
 
 const Codes = () => {
-  const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
   const [couponCodes, setCouponCodes] = useState([]);
 
   useEffect(() => {
@@ -15,7 +14,7 @@ const Codes = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get(`${backendURL}/api/coupons`);
+      const response = await axios.get(`/api/coupons`);
       setCouponCodes(response.data);
     } catch (error) {
       console.error('Error fetching coupons:', error.message);

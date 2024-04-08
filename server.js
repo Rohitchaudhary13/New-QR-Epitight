@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 // const { createCanvas } = require("canvas");
 const QRCode = require("qrcode");
+const path = require("path");
 require("dotenv").config();
 
 const app = express();
@@ -32,11 +33,9 @@ const Coupon = mongoose.model("Coupon", {
   generatedAt: { type: Date }
 });
 
-const path = require("path");
-app.get("/", (req, res) => {
-  app.use(express.static(path.resolve(__dirname, "frontend")));
-  res.sendFile(path.resolve(__dirname, "frontend", "index.html"));
-});
+
+
+
 
 app.get('/api/coupons', async (req, res) => {
   try {
@@ -164,6 +163,12 @@ app.delete("/api/coupons", async (req, res) => {
     res.status(500).send(error.message);
   }
 });
+
+// const __dirname = path.resolve();
+// app.use(express.static(path.join(__dirname, "/frontend/dist")));
+// app.get("*", (req, res) => {
+//   res.sendFile(path.join(__dirname, "frontend", "dist", "index.html"));
+// });
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

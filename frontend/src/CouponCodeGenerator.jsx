@@ -7,7 +7,6 @@ import loading2 from "react-useanimations/lib/loading2";
 import CouponSlip from "./CouponSlip";
 
 const CouponCodeGenerator = () => {
-  const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
 
   const [numCoupons, setNumCoupons] = useState(1);
   const [couponCodes, setCouponCodes] = useState([]);
@@ -23,7 +22,7 @@ const CouponCodeGenerator = () => {
 
   const fetchCoupons = async () => {
     try {
-      const response = await axios.get(`${backendURL}/api/coupons`);
+      const response = await axios.get(`/api/coupons`);
       setCouponCodes(response.data);
     } catch (error) {
       console.error("Error fetching coupons:", error.message);
@@ -38,7 +37,7 @@ const CouponCodeGenerator = () => {
       const generatedCouponCodes = [];
       for (let i = 0; i < numCoupons; i++) {
         const { data } = await axios.post(
-          `${backendURL}/api/coupons`,
+          `/api/coupons`,
           generateCouponData()
         );
         generatedCouponCodes.push(data);
@@ -75,7 +74,7 @@ const CouponCodeGenerator = () => {
 
   const handleDeleteData = async () => {
     try {
-      await axios.delete(`${backendURL}/api/coupons`);
+      await axios.delete(`/api/coupons`);
       alert("All data deleted successfully!");
       window.location.reload();
     } catch (error) {

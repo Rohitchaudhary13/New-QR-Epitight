@@ -6,7 +6,6 @@ import loading2 from "react-useanimations/lib/loading2";
 import CouponSlip from "./CouponSlip";
 
 const FilteredCoupons = () => {
-  const backendURL = import.meta.env.VITE_BACKEND_BASE_URL;
   const { selectedDate } = useParams();
   const [couponCodes, setCouponCodes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -16,7 +15,7 @@ const FilteredCoupons = () => {
       try {
         setLoading(true);
         const response = await axios.get(
-          `${backendURL}/api/coupons?date=${selectedDate}&used=false`
+          `/api/coupons?date=${selectedDate}&used=false`
         );
         setCouponCodes(response.data);
       } catch (error) {
